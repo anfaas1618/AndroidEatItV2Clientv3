@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.nbfinal.androideatitv2client",
+  "applicationId": "com.NirmalBakeryClient.androideatitv2client",
   "variantName": "debug",
   "elements": [
     {

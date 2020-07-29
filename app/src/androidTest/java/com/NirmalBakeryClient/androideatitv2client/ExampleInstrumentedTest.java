@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.nbfinal.androideatitv2client", appContext.getPackageName());
+        assertEquals("com.NirmalBakeryClient.androideatitv2client", appContext.getPackageName());
     }
 }

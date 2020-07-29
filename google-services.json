@@ -8,50 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1086301440972:android:37c16aa668d6a7c2282b69",
+        "mobilesdk_app_id": "1:1086301440972:android:1f9e983ef8c851ec282b69",
         "android_client_info": {
-          "package_name": "com.nbfinal.androideatitv2client"
+          "package_name": "com.NirmalBakeryClient.androideatitv2client"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1086301440972-berbnnskabfo0rkka2iq7peb0mol3uec.apps.googleusercontent.com",
+          "client_id": "1086301440972-0megbo8n1o4jpnlsmb217od67ba2hpfh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.nbfinal.androideatitv2client",
+            "package_name": "com.NirmalBakeryClient.androideatitv2client",
             "certificate_hash": "7b47cd202bda3a74b45243e725b7cadda1d786e0"
-          }
-        },
-        {
-          "client_id": "1086301440972-kfhb8hecre17ieno158r4nb510n3me91.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nbfinal.androideatitv2client",
-            "certificate_hash": "9507eaddb7937104bd52b8ca5df0bbedfb8fadf5"
-          }
-        },
-        {
-          "client_id": "1086301440972-1oceu7c1cdi3knemugr87q1soobnjf1m.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nbfinal.androideatitv2client",
-            "certificate_hash": "74dbd18a1221983e6a284161e44490fcfc1d4761"
-          }
-        },
-        {
-          "client_id": "1086301440972-qdljn78ukkasud6rdf93aiujfk94sphm.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nbfinal.androideatitv2client",
-            "certificate_hash": "7ec7bab4055bdaf2b5d5cc08e92b79b0abd94865"
-          }
-        },
-        {
-          "client_id": "1086301440972-0dv0ivoe57olv9rs4d4rthdrgrlrostk.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nbfinal.androideatitv2client",
-            "certificate_hash": "65553e401dde2aa5e0f181c14e8619d0af9737c3"
           }
         },
         {

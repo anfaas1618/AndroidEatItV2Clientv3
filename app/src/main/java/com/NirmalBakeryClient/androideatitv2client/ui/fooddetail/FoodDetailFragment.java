@@ -147,7 +147,8 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
         cartItem.setFoodPrice(Double.valueOf(String.valueOf(Common.selectedFood.getPrice())));
         cartItem.setFoodQuantity(Integer.valueOf(number_button.getNumber()));
         cartItem.setFoodExtraPrice(Common.calculateExtraPrice(Common.selectedFood.getUserSelectedSize(), Common.selectedFood.getUserSelectedAddon())); //Because Default we do not choose Size + Addon
-        if(Common.selectedFood.getUserSelectedAddon() != null)
+
+         if(Common.selectedFood.getUserSelectedAddon() != null)
             cartItem.setFoodAddOn(new Gson().toJson(Common.selectedFood.getUserSelectedAddon()));
         else
             cartItem.setFoodAddOn("Default");
@@ -492,7 +493,7 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
             btnCart.setVisibility(View.VISIBLE);
         }
         else {
-            out_of_stock.setText("out of stock");
+            out_of_stock.setText("Out of Stock");
             btnCart.setVisibility(View.INVISIBLE);
         }
         food_description.setText(new StringBuilder(foodModel.getDescription()));
@@ -523,7 +524,6 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
             radioButton.setLayoutParams(params);
             radioButton.setText(sizeModel.getName());
             radioButton.setTag(sizeModel.getPrice());
-            radioButton.setTextColor(Color.WHITE);//added
 
             rdi_group_size.addView(radioButton);
         }

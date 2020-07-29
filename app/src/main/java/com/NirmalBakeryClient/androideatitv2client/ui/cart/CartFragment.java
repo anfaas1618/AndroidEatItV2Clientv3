@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -128,7 +129,7 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
 
     private Parcelable recyclerViewState;
     private CartDataSource cartDataSource;
-
+    Button placeOrderBtn;
     ILoadTimeFromFirebaseListener listener;
 
 
@@ -160,138 +161,149 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
     private Unbinder unbinder;
 
     private CartViewModel cartViewModel;
+     TextView minimum_text;
 
     @OnClick(R.id.btn_place_order)
     void onPlaceOrderClick() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("One more step!");
+        String[] price=txt_total_price.getText().toString().trim().split("Total: ");
+        if (   Double.parseDouble(price[1])<500)
+        {
+            Log.i("anfaas quershi", "boom great");
+            minimum_text.setVisibility(View.VISIBLE);
+        }
+else {
+            minimum_text.setVisibility(View.GONE);
 
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_place_order, null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("One more step!");
+
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_place_order, null);
 
 
-        EditText edt_address = (EditText) view.findViewById(R.id.edt_address);
-        EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
-        TextView txt_address = (TextView) view.findViewById(R.id.txt_address_detail);
-        RadioButton rdi_home = (RadioButton) view.findViewById(R.id.rdi_home_address);
-        RadioButton rdi_other_address = (RadioButton) view.findViewById(R.id.rdi_other_address);
-        RadioButton rdi_ship_to_this = (RadioButton) view.findViewById(R.id.rdi_ship_this_address);
-        RadioButton rdi_cod = (RadioButton) view.findViewById(R.id.rdi_cod);
+            EditText edt_address = (EditText) view.findViewById(R.id.edt_address);
+            EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
+            TextView txt_address = (TextView) view.findViewById(R.id.txt_address_detail);
+            RadioButton rdi_home = (RadioButton) view.findViewById(R.id.rdi_home_address);
+            RadioButton rdi_other_address = (RadioButton) view.findViewById(R.id.rdi_other_address);
+            RadioButton rdi_ship_to_this = (RadioButton) view.findViewById(R.id.rdi_ship_this_address);
+            RadioButton rdi_cod = (RadioButton) view.findViewById(R.id.rdi_cod);
 
-        places_fragment = (AutocompleteSupportFragment) getActivity().getSupportFragmentManager()
-                .findFragmentById(R.id.places_autocomplete_fragment);
-        places_fragment.setPlaceFields(placeFields);
-        places_fragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(@NonNull Place place) {
-                placeSelected = place;
-                edt_address.setText(place.getAddress());
-            }
+            places_fragment = (AutocompleteSupportFragment) getActivity().getSupportFragmentManager()
+                    .findFragmentById(R.id.places_autocomplete_fragment);
+            places_fragment.setPlaceFields(placeFields);
+            places_fragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    placeSelected = place;
+                    edt_address.setText(place.getAddress());
+                }
 
-            @Override
-            public void onError(@NonNull Status status) {
-                Toast.makeText(getContext(), "" + status.getStatusMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onError(@NonNull Status status) {
+                    Toast.makeText(getContext(), "" + status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
-        //Data
-        edt_address.setText(Common.currentUser.getAddress()); //By Default We select, Home Address, So Users' Address Will display
+            //Data
+            edt_address.setText(Common.currentUser.getAddress()); //By Default We select, Home Address, So Users' Address Will display
 
-        //Event
-        rdi_home.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                edt_address.setText(Common.currentUser.getAddress());
-                txt_address.setVisibility(View.GONE);
-                places_fragment.setHint(Common.currentUser.getAddress());
-            }
-        });
+            //Event
+            rdi_home.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    edt_address.setText(Common.currentUser.getAddress());
+                    txt_address.setVisibility(View.GONE);
+                    places_fragment.setHint(Common.currentUser.getAddress());
+                }
+            });
 
-        rdi_other_address.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                edt_address.setText(""); //Clear
-                edt_address.setHint("Enter your address");
-                txt_address.setVisibility(View.GONE);
-            }
-        });
-        rdi_ship_to_this.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
+            rdi_other_address.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    edt_address.setText(""); //Clear
+                    edt_address.setHint("Enter your address");
+                    txt_address.setVisibility(View.GONE);
+                }
+            });
+            rdi_ship_to_this.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
 //                Toast.makeText(getContext(), "Implement late with Google API!", Toast.LENGTH_SHORT).show();
-                fusedLocationProviderClient.getLastLocation()
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                txt_address.setVisibility(View.GONE);
-                            }
-                        })
-                        .addOnCompleteListener(new OnCompleteListener<Location>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Location> task) {
-                                String coordinates = new StringBuilder()
-                                        .append(task.getResult().getLatitude())
-                                        .append("/")
-                                        .append(task.getResult().getLongitude()).toString();
+                    fusedLocationProviderClient.getLastLocation()
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    txt_address.setVisibility(View.GONE);
+                                }
+                            })
+                            .addOnCompleteListener(new OnCompleteListener<Location>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Location> task) {
+                                    String coordinates = new StringBuilder()
+                                            .append(task.getResult().getLatitude())
+                                            .append("/")
+                                            .append(task.getResult().getLongitude()).toString();
 
-                                Single<String> singleAddress = Single.just(getAddressFromLatLng(task.getResult().getLatitude(),
-                                        task.getResult().getLongitude()));
+                                    Single<String> singleAddress = Single.just(getAddressFromLatLng(task.getResult().getLatitude(),
+                                            task.getResult().getLongitude()));
 
-                                Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
+                                    Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
 
-                                    @Override
-                                    public void onSuccess(String s) {
-                                        edt_address.setText(coordinates);
-                                        txt_address.setText(s);
-                                        txt_address.setVisibility(View.VISIBLE);
-                                        places_fragment.setHint(s);
-                                    }
+                                        @Override
+                                        public void onSuccess(String s) {
+                                            edt_address.setText(coordinates);
+                                            txt_address.setText(s);
+                                            txt_address.setVisibility(View.VISIBLE);
+                                            places_fragment.setHint(s);
+                                        }
 
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        edt_address.setText(coordinates);
-                                        txt_address.setText(e.getMessage());
-                                        txt_address.setVisibility(View.VISIBLE);
-                                    }
-                                });
-
-
-                            }
-                        })
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            edt_address.setText(coordinates);
+                                            txt_address.setText(e.getMessage());
+                                            txt_address.setVisibility(View.VISIBLE);
+                                        }
+                                    });
 
 
-                ;
-
-            }
-        });
+                                }
+                            })
 
 
-        builder.setView(view);
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                    ;
 
-            }
-        });
+                }
+            });
 
 
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            builder.setView(view);
+            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+
+                }
+            });
+
+
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 //                Toast.makeText(getContext(), "Implement Late!", Toast.LENGTH_SHORT).show();
-                if (rdi_cod.isChecked())
-                    paymentCOD(edt_address.getText().toString(), edt_comment.getText().toString());
-            }
-        });
+                    if (rdi_cod.isChecked())
+                        paymentCOD(edt_address.getText().toString(), edt_comment.getText().toString());
+                }
+            });
 
-        AlertDialog dialog = builder.create();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.remove(places_fragment);
-                fragmentTransaction.commit();
-            }
-        });
-        dialog.show();
+            AlertDialog dialog = builder.create();
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.remove(places_fragment);
+                    fragmentTransaction.commit();
+                }
+            });
+            dialog.show();
+        }
     }
 
     private void paymentCOD(String address, String comment) {
@@ -531,6 +543,15 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
         locationRequest.setSmallestDisplacement(10f);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        placeOrderBtn= view.findViewById(R.id.btn_place_order);
+        minimum_text=view.findViewById(R.id.minimum_text);
+        minimum_text.setVisibility(View.INVISIBLE);
+
+    }
+
     private void initViews() {
 
         searchFoodCallbackListener = this;
@@ -664,6 +685,18 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
                     @Override
                     public void onSuccess(Double aDouble) {
                         txt_total_price.setText(new StringBuilder("Total: ").append(aDouble));
+                        String[] price=txt_total_price.getText().toString().trim().split("Total: ");
+                        if (   Double.parseDouble(price[1])>500)
+                        {
+                            Log.i("anfaas quershi", "boom great");
+
+                            minimum_text.setVisibility(View.GONE);
+
+                        }
+                        else {
+                            minimum_text.setVisibility(View.VISIBLE);
+                        }
+
                     }
 
                     @Override
